@@ -81,7 +81,8 @@
         <div slot="action" slot-scope="text,data">
           <a class="button" @click="showDeleteConfirm(data.id)"><a-icon type="delete" /></a> |
           <a class="button" :href="'/products/edit/'+ data.id "><a-icon type="edit" /></a> |
-          <a class="button" :href="'/products/detail/'+ data.id " ><a-icon type="info-circle" /></a>
+          <a class="button" :href="'/products/detail/'+ data.id " ><a-icon type="info-circle" /></a> |
+          <a class="button" @click="addToCart(data.id) " ><a-icon type="shopping-cart" /></a>
         </div>
       </a-table>
       <div>
@@ -101,12 +102,17 @@
 import {columns} from "@/pages/product/columns";
 import ProductService from "@/service/ProductService";
 import CategoryService from "@/service/CategoryService";
+import CartService from "@/service/CartService";
 
 
 export default {
   data() {
     return {
       data: [],
+      form:{
+        productId:undefined,
+        quantity:1
+      },
       columns: columns,
       totalRecord: undefined,
       categories:[],
@@ -180,6 +186,13 @@ export default {
         name: undefined,
         page: undefined,
       }
+    },
+    addToCart(id){
+      this.form.productId = id
+      CartService.addtoCart(this.form).then(response=>{
+        console.log(response)
+        this.$message.success("ADD TO CART SUCCESS")
+      })
     }
   }
 };
